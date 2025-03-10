@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\File;
 
 class MemberController extends Controller
 {
-    public function __construct(){
-       $this->middleware('auth:admins')->only(['store', 'update', 'destroy']);
+    use ResponseJsonTrait;
+    public function __construct()
+    {
+        $this->middleware('auth:admins')->only(['store', 'update', 'destroy']);
     }
-     use ResponseJsonTrait ;
     public function index()
     {
         $members = Member::all();
@@ -25,9 +26,12 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
-            'position' => 'required|string',
+            'name' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:4000',
+            'facebook_link' => 'nullable|url',
+            'linkedIn_link' => 'nullable|url',
+            'phone' => 'required|string|min:10|max:15|regex:/^[0-9]+$/',
         ]);
         $originalName = $request->image->getClientOriginalName();
         $imageName = time() . '_' . $originalName;
@@ -37,24 +41,34 @@ class MemberController extends Controller
             'name' => $request->name,
             'position' => $request->position,
             'image' => $imageUrl,
+            'facebook_link' => $request->facebook_link,
+            'linkedIn_link' => $request->linkedIn_link,
+            'phone' => $request->phone,
         ]);
+
         return $this->sendSuccess('Member Added Successfully ', $member, 201);
     }
     public function update(Request $request, $id)
     {
         $member = Member::findOrFail($id);
         $request->validate([
-            'name' => 'nullable|string',
-            'position' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'facebook_link' => 'nullable|url',
+            'linkedIn_link' => 'nullable|url',
+            'phone' => 'nullable|string|min:10|max:15|regex:/^[0-9]+$/',
         ]);
         $data = [
-            'title' => $request->title,
-            'position' => $request->position,
+            'name' => $request->name ?? $member->name,
+            'position' => $request->position ?? $member->position,
+            'facebook_link' => $request->facebook_link ?? $member->facebook_link,
+            'linkedIn_link' => $request->linkedIn_link ?? $member->linkedIn_link,
+            'phone' => $request->phone ?? $member->phone,
         ];
         if ($request->hasFile('image')) {
             $oldImagePath = public_path('uploads/members/' . basename($member->image));
-            if (file_exists($oldImagePath)) {
+            if (file_exists($oldImagePath) && !is_dir($oldImagePath)) {
                 unlink($oldImagePath);
             }
             $originalName = $request->image->getClientOriginalName();

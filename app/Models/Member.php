@@ -8,7 +8,7 @@ class Member extends Model
 {
     use HasFactory;
     protected $table = 'members';
-    protected $fillable = ['name', 'image', 'position'];
+    protected $fillable = ['name', 'image', 'position'  , 'facebook_link' , 'linkedIn_link' , 'phone'];
     protected $keyType = 'string';
     public $incrementing = false;
     protected static function boot()

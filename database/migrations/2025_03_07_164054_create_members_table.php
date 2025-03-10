@@ -13,7 +13,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('position');
-            $table->string('image');;
+            $table->string('image');
+            $table->string('facebook_link')->nullable();
+            $table->string('linkedIn_link')->nullable();
+            $table->string('phone',15);
             $table->timestamps();
         });
     }
