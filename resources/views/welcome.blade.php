@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h1 style="text-align :center">Wonder Makers Comming Soon</h1>
+    <h1 style="text-align :center ; font-family:cursive">Wonder Makers Comming Soon</h1>
 </body>
 
 </html>
