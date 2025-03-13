@@ -20,5 +20,6 @@ Route::middleware(['api'])->prefix('admin')->group(function() {
     Route::post('/login', [AdminController::class, 'login']);
     Route::post('/logout', [AdminController::class, 'logout']);
     Route::post('/register', [AdminController::class, 'register']);
+    Route::post('/resetPassword', [AdminController::class, 'resetPassword']);
     Route::get('/getaccount', [AdminController::class, 'getaccount']);
 });

@@ -48,6 +48,30 @@ class AdminController extends Controller
             'token' => $token,
         ], 200);
     }
+    public function resetPassword(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|string|email|exists:admins,email',
+        'old_password' => 'required|string',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 400);
+    }
+
+    $admin = Admin::where('email', $request->email)->first();
+
+    if (!$admin || !Hash::check($request->old_password, $admin->password)) {
+        return response()->json(['error' => 'Invalid email or old password.'], 400);
+    }
+
+    $admin->password = Hash::make($request->password);
+    $admin->save();
+
+    return response()->json(['message' => 'Password updated successfully.'], 200);
+}
+
     public function getaccount()
     {
         return response()->json(auth('admins')->user());
