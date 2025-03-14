@@ -12,7 +12,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignUuid('icon_service_id')->constrained('icon_services')->cascadeOnDelete()->cascadeOnUpdate() ;
+            $table->text('icon');
             $table->timestamps();
         });
     }

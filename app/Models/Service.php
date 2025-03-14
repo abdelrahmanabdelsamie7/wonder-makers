@@ -10,7 +10,7 @@ class Service extends Model
 {
     use HasFactory;
     protected $table = 'services' ;
-    protected $fillable = ['title','description' , 'icon_service_id'];
+    protected $fillable = ['title','description' , 'icon'];
      protected $keyType = 'string';
     public $incrementing = false;
     protected static function boot()
@@ -21,8 +21,5 @@ class Service extends Model
                 $model->id = Str::uuid()->toString();
             }
         });
-    }
-    public function icon_service(){
-        return $this->belongsTo(IconService::class) ;
     }
 }

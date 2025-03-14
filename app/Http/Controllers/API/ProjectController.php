@@ -26,7 +26,6 @@ class ProjectController extends Controller
     {
         $request->validate([
             'title' => 'required|string',
-            'description' => 'required|string',
             'imageCover' => 'required|image|mimes:jpeg,png,jpg,gif|max:4000',
         ]);
         $originalName = $request->imageCover->getClientOriginalName();
@@ -35,7 +34,6 @@ class ProjectController extends Controller
         $imageUrl = asset('uploads/projects/' . $imageName);
         $project = Project::create([
             'title' => $request->title,
-            'description' => $request->description,
             'imageCover' => $imageUrl,
         ]);
         return $this->sendSuccess('Project Added Successfully ', $project, 201);
@@ -45,12 +43,10 @@ class ProjectController extends Controller
         $project = Project::findOrFail($id);
         $request->validate([
             'title' => 'nullable|string',
-            'description' => 'nullable|string',
             'imageCover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
        $data = [
             'title' => $request->title,
-            'description' => $request->description,
         ];
         if ($request->hasFile('imageCover')) {
             $oldImagePath = public_path('uploads/projects/' . basename($project->imageCover));

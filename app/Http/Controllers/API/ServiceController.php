@@ -13,14 +13,12 @@ class ServiceController extends Controller
     }
     public function index()
     {
-        $services = Service::select('id', 'title', 'icon_service_id')
-            ->with(['icon_service:id,title'])
-            ->get();
+        $services = Service::all();
         return $this->sendSuccess('Services Retrieved Successfully', $services);
     }
     public function show($id)
     {
-        $service = Service::with(['icon_service:id,title'])->findOrFail($id);
+        $service = Service::findOrFail($id);
         return $this->sendSuccess('Service Data Retrieved Successfully ', $service);
     }
     public function store(Request $request)
@@ -28,12 +26,12 @@ class ServiceController extends Controller
         $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
-            'icon_service_id' => 'required|string|exists:icon_services,id',
+            'icon' => 'required|string',
         ]);
         $service = Service::create([
             'title' => $request->title,
             'description' => $request->description,
-            'icon_service_id' => $request->icon_service_id,
+            'icon' => $request->icon,
         ]);
         return $this->sendSuccess('Services Added Successfully ', $service, 201);
     }
@@ -43,7 +41,7 @@ class ServiceController extends Controller
         $validatedRequest = $request->validate([
             'title' => 'string',
             'description' => 'string',
-            'icon_service_id' => 'string|exists:icon_services,id',
+            'icon' => 'string',
         ]);
         $service->update($validatedRequest);
         return $this->sendSuccess('Services Updated Successfully ', $service, 201);
@@ -51,10 +49,6 @@ class ServiceController extends Controller
     public function destroy($id)
     {
         $service = Service::findOrFail($id);
-        $imagePath = public_path(str_replace(asset('/'), '', $service->image));
-        if (File::exists($imagePath) && !str_contains($service->image, 'default.jpg')) {
-            File::delete($imagePath);
-        }
         $service->delete();
         return $this->sendSuccess('Services Removed Successfully');
     }
