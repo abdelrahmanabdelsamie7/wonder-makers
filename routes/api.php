@@ -1,15 +1,15 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\API\{ServiceController , ContactController , SponserController , MemberController, ProjectController , ImageProjectController , IconServiceController};
+use App\Http\Controllers\API\{ServiceController , ContactController , SponserController , MemberController, ProjectController , ImageProjectController,StatisticsController };
 
-Route::apiResource('icon-services' , IconServiceController::class) ;
 Route::apiResource('services' , ServiceController::class) ;
 Route::apiResource('contact' , ContactController::class) ;
 Route::apiResource('sponsers' , SponserController::class) ;
 Route::apiResource('members' , MemberController::class) ;
 Route::apiResource('projects' , ProjectController::class) ;
 Route::apiResource('image-project' , ImageProjectController::class) ;
+Route::get('statistics' , [StatisticsController::class,'getStatistics']) ;
 
 Route::match(['post', 'put', 'patch'], 'sponsers/{id}', [SponserController::class, 'update']);
 Route::match(['post', 'put', 'patch'], 'projects/{id}', [ProjectController::class, 'update']);
